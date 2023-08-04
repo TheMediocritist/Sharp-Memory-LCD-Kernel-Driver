@@ -283,12 +283,12 @@ int thread_fn(void* v)
                     pixel = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i)));
 			
 		    // Calculate the threshold value based on the dithering matrix
-		    threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
+		    //threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
 
 		    // Set the pixel value to either white or black
 		    pixelbw = (pixel > threshold) ? 1 : 0;
 
-                    if(pixelbw)
+                    if(pixel)
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
