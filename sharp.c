@@ -288,7 +288,7 @@ int thread_fn(void* v)
 		    // Set the pixel value to either white or black
 		    pixelbw = (pixel > threshold) ? 1 : 0;
 
-                    if(pixel)
+                    if(pixelbw == 1)
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
