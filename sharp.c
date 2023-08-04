@@ -286,7 +286,7 @@ int thread_fn(void* v)
 		    int threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
 
 		    // Set the pixel value to either white or black
-		    pixel = (pixelValue > threshold) ? 1 : 0;
+		    pixel = (pixel > threshold) ? 1 : 0;
 
                     if(pixel)
                     {
