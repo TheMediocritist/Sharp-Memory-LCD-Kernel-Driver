@@ -227,7 +227,7 @@ int thread_fn(void* v)
 {
     //int i;
     int x, y, i, threshold;
-    char pixel;
+    char pixel, pixelbw;
     char hasChanged = 0;
 
     unsigned char *screenBufferCompressed;
@@ -283,12 +283,12 @@ int thread_fn(void* v)
                     pixel = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i)));
 			
 		    // Calculate the threshold value based on the dithering matrix
-		    //threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
+		    threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
 
 		    // Set the pixel value to either white or black
-		    //pixel = (pixel > threshold) ? 1 : 0;
+		    pixelbw = (pixel > threshold) ? 1 : 0;
 
-                    if(pixel)
+                    if(pixelbw)
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
