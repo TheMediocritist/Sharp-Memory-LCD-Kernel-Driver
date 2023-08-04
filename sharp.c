@@ -233,7 +233,7 @@ int fpsThreadFunction(void* v)
 int thread_fn(void* v) 
 {
     //int i;
-    int x,y,i;
+    int x, y, i, threshold;
     char pixel;
     char hasChanged = 0;
 
@@ -283,7 +283,7 @@ int thread_fn(void* v)
                     pixel = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i)));
 			
 		    // Calculate the threshold value based on the dithering matrix
-		    int threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
+		    threshold = (ditherMatrix[(x * 8 + i) % 4][y % 4] + 0.5) * (255.0 / 15.0);
 
 		    // Set the pixel value to either white or black
 		    pixel = (pixel > threshold) ? 1 : 0;
