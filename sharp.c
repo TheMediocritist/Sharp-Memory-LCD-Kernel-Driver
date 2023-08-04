@@ -42,13 +42,6 @@ char vcomState;
 
 unsigned char lineBuffer[LCDWIDTH/8];
 
-const int ditherMatrix[4][4] = {
-    { 0,  8,  2, 10 },
-    { 12,  4, 14,  6 },
-    {  3, 11,  1,  9 },
-    { 15,  7, 13,  5 }
-};
-
 struct sharp {
     struct spi_device	*spi;
 	int			id;
@@ -240,6 +233,13 @@ int thread_fn(void* v)
     unsigned char *screenBufferCompressed;
     char bufferByte = 0;
     char sendBuffer[1 + (1+50+1)*1 + 1];
+
+    int ditherMatrix[4][4] = {
+	    { 0,  8,  2, 10 },
+	    { 12,  4, 14,  6 },
+	    {  3, 11,  1,  9 },
+	    { 15,  7, 13,  5 }
+	};
 
     clearDisplay();
 
