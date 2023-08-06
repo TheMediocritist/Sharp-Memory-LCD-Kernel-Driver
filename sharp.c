@@ -227,10 +227,9 @@ int thread_fn(void* v)
 {
 	int x, y, i, threshold;
 	uint8_t red, green, blue, grayscale;
-	uint16_t pixelValue
-	char pixel, pixelbw;
+	uint16_t pixelValue;
 	char hasChanged = 0;
-	float gamma = 2.2; 
+	//float gamma = 2.2; 
 
 	unsigned char *screenBufferCompressed;
 	char bufferByte = 0;
@@ -286,9 +285,9 @@ int thread_fn(void* v)
 					green = (pixelValue >> 5) & 0x3F;
 					blue = pixelValue & 0x1F;
 
-					// Convert RGB565 components to grayscale with adjustable gamma
-					grayscale = 255 * pow(((0.299 * pow(red / 31, gamma)) + (0.587 * pow(green / 63, gamma)) + (0.114 * pow(blue / 31, gamma))), 1 / gamma);
-			
+					// Convert RGB565 components to grayscale 
+					grayscale = ((29 * red) + (59 * green) + (12 * blue))/100;
+					
 					// Calculate the threshold value based on the dithering matrix
 					threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
 
