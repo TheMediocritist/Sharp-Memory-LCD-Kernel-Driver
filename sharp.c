@@ -10,7 +10,6 @@
 #include <linux/delay.h>
 #include <linux/time.h>
 #include <linux/timer.h>
-#include <math.h>
 
 #include <linux/fb.h>
 #include <linux/mm.h>
@@ -231,7 +230,7 @@ int thread_fn(void* v)
 	uint16_t pixelValue;
 	char pixel, pixelbw;
 	char hasChanged = 0;
-	float gamma = 2.2; 
+	//float gamma = 2.2; 
 
 	unsigned char *screenBufferCompressed;
 	char bufferByte = 0;
@@ -288,8 +287,8 @@ int thread_fn(void* v)
 					blue = pixelValue & 0x1F;
 
 					// Convert RGB565 components to grayscale with adjustable gamma
-					grayscale = 255 * pow(((0.299 * pow(red / 31, gamma)) + (0.587 * pow(green / 63, gamma)) + (0.114 * pow(blue / 31, gamma))), 1 / gamma);
-			
+					grayscale = (0.299 * red) + (0.587 * green) + (0.114 * blue);
+					
 					// Calculate the threshold value based on the dithering matrix
 					threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
 
