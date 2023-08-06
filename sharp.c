@@ -10,7 +10,7 @@
 #include <linux/delay.h>
 #include <linux/time.h>
 #include <linux/timer.h>
-#include <linux/math.h>
+#include <math.h>
 
 #include <linux/fb.h>
 #include <linux/mm.h>
