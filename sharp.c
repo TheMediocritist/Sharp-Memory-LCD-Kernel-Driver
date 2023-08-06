@@ -44,12 +44,12 @@ unsigned char lineBuffer[LCDWIDTH/8];
 
 struct sharp {
 	struct 	spi_device *spi;
-	int		id;
+	int	id;
 	char	name[sizeof("sharp-3")];
 
 	struct mutex		mutex;
 	struct work_struct	work;
-	spinlock_t			lock;
+	spinlock_t		lock;
 };
 
 struct sharp   *screen;
@@ -65,21 +65,24 @@ void sendLine(char *buffer, char lineNumber);
 static struct fb_var_screeninfo vfb_default = {
 	.xres 			= 400,
 	.yres 			= 240,
-	.xres_virtual 	= 400,
-	.yres_virtual 	= 480,
-	.bits_per_pixel = 16,
+	.xres_virtual 		= 400,
+	.yres_virtual 		= 480,
+	.bits_per_pixel 	= 16,
 	.grayscale 		= 0,
-	.red 			= { 0, 8, 0 },
-	.green 			= { 0, 8, 0 },
-	.blue 			= { 0, 8, 0 },
+	.red.offset		= 11,
+	.red.length		= 5,
+	.green.offset		= 5,
+	.green.length		= 6,
+	.blue.offset		= 0,
+	.blue.length		= 5,
 	.activate 		= FB_ACTIVATE_NOW,
 	.height 		= 400,
 	.width 			= 240,
 	.pixclock 		= 20000,
-	.left_margin 	= 0,
-	.right_margin 	= 0,
-	.upper_margin 	= 0,
-	.lower_margin 	= 0,
+	.left_margin 		= 0,
+	.right_margin 		= 0,
+	.upper_margin 		= 0,
+	.lower_margin 		= 0,
 	.hsync_len 		= 128,
 	.vsync_len 		= 128,
 	.vmode 			= FB_VMODE_NONINTERLACED,
@@ -88,7 +91,7 @@ static struct fb_var_screeninfo vfb_default = {
 static struct fb_fix_screeninfo vfb_fix = {
 	.id 			= "Sharp FB",
 	.type 			= FB_TYPE_PACKED_PIXELS,
-	.line_length 	= 800,
+	.line_length 		= 800,
 	.xpanstep 		= 0,
 	.ypanstep 		= 0,
 	.ywrapstep 		= 0,
@@ -109,8 +112,7 @@ static struct task_struct *thread1;
 static struct task_struct *fpsThread;
 static struct task_struct *vcomToggleThread;
 
-static int vfb_mmap(struct fb_info *info,
-			struct vm_area_struct *vma)
+static int vfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
 {
 	unsigned long start = vma->vm_start;
 	unsigned long size = vma->vm_end - vma->vm_start;
@@ -398,8 +400,7 @@ static int sharp_probe(struct spi_device *spi)
 	if (retval < 0)
 		goto err2;
 
-	fb_info(info, "Virtual frame buffer device, using %ldK of video memory\n",
-		videomemorysize >> 10);
+	fb_info(info, "Virtual frame buffer device, using %ldK of video memory\n", videomemorysize >> 10);
 	return 0;
 err2:
 	fb_dealloc_cmap(&info->cmap);
@@ -413,11 +414,11 @@ err:
 
 static void sharp_remove(struct spi_device *spi)
 {
-		if (info) {
-				unregister_framebuffer(info);
-				fb_dealloc_cmap(&info->cmap);
-				framebuffer_release(info);
-		}
+	if (info) {
+		unregister_framebuffer(info);
+		fb_dealloc_cmap(&info->cmap);
+		framebuffer_release(info);
+	}
 	kthread_stop(thread1);
 	kthread_stop(fpsThread);
 	kthread_stop(vcomToggleThread);
@@ -428,7 +429,8 @@ static void sharp_remove(struct spi_device *spi)
 static struct spi_driver sharp_driver = {
 	.probe          = sharp_probe,
 	.remove         = sharp_remove,
-	.driver = {
+	.driver = 
+	{
 		.name	= "sharp",
 		.owner	= THIS_MODULE,
 	},
