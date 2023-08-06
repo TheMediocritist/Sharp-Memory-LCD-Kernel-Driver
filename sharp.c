@@ -228,7 +228,6 @@ int thread_fn(void* v)
 	int x, y, i, threshold;
 	uint8_t red, green, blue, grayscale;
 	uint16_t pixelValue;
-	char pixel, pixelbw;
 	char hasChanged = 0;
 	//float gamma = 2.2; 
 
