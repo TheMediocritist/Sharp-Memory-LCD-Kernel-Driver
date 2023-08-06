@@ -286,8 +286,8 @@ int thread_fn(void* v)
 					green = (pixelValue >> 5) & 0x3F;
 					blue = pixelValue & 0x1F;
 
-					// Convert RGB565 components to grayscale with adjustable gamma
-					grayscale = (0.299 * red) + (0.587 * green) + (0.114 * blue);
+					// Convert RGB565 components to grayscale 
+					grayscale = ((29 * red) + (59 * green) + (12 * blue))/100;
 					
 					// Calculate the threshold value based on the dithering matrix
 					threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
