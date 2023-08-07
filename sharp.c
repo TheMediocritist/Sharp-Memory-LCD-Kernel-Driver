@@ -227,7 +227,8 @@ int thread_fn(void* v)
 {
     //int i;
     int x, y, i, threshold;
-    char pixel, pixelbw;
+	uint8_t red, green, blue, grayscale;
+	uint16_t pixelValue;
     char hasChanged = 0;
 
     unsigned char *screenBufferCompressed;
@@ -279,16 +280,21 @@ int thread_fn(void* v)
             for(x=0 ; x<50 ; x++)
             {
                 for(i=0 ; i<8 ; i++ )
-                {
-                    pixel = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i)));
+		{
+                    pixelValue = ioread16((void*)((uintptr_t)info->fix.smem_start + (x*2 + y*800 + i*2)));  // Each pixel is 2 bytes
+					
+			// Extract red, green, and blue components from RGB565 pixel
+			red = (pixelValue >> 11) & 0x1F;
+			green = (pixelValue >> 5) & 0x3F;
+			blue = pixelValue & 0x1F;
+
+			// Convert RGB565 components to grayscale 
+			grayscale = ((29 * red) + (59 * green) + (12 * blue))/100;
 			
-		    // Calculate the threshold value based on the dithering matrix
-		    threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
+			// Calculate the threshold value based on the dithering matrix
+			threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
 
-		    // Set the pixel value to either white or black
-		    pixelbw = (pixel > threshold) ? 1 : 0;
-
-                    if(pixelbw == 1)
+			if(grayscale > threshold)
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
