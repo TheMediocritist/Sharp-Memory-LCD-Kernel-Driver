@@ -293,7 +293,7 @@ int thread_fn(void* v)
 			// Calculate the threshold value based on the dithering matrix
 			threshold = ((ditherMatrix[(x * 16 + i * 2) % 4][y % 4] * 255 + 7) / 15);
 
-			if(grayscale > threshold)
+			if(grayscale > 0)
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
