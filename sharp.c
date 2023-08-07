@@ -67,11 +67,10 @@ static struct fb_var_screeninfo vfb_default = {
     .yres =     240,
     .xres_virtual = 400,
     .yres_virtual = 240,
-    .bits_per_pixel = 8,
-    .grayscale = 1,
-    .red =      { 0, 8, 0 },
-    .green =    { 0, 8, 0 },
-    .blue =     { 0, 8, 0 },
+    .bits_per_pixel = 16,
+    .red =		{ 11, 5, 0 },
+    .green =	{ 5,  6, 0 },
+    .blue =		{ 0,  5, 0 },
     .activate = FB_ACTIVATE_NOW,
     .height =   400,
     .width =    240,
@@ -88,7 +87,7 @@ static struct fb_var_screeninfo vfb_default = {
 static struct fb_fix_screeninfo vfb_fix = {
     .id =       "Sharp FB",
     .type =     FB_TYPE_PACKED_PIXELS,
-    .line_length = 400,
+    .line_length = 800,
     .xpanstep = 0,
     .ypanstep = 0,
     .ywrapstep =    0,
@@ -227,7 +226,9 @@ int thread_fn(void* v)
 {
     //int i;
     int x, y, i, threshold;
-    char pixel, pixelbw;
+    uint8_t red, green, blue, grayscale;
+    uint16_t pixel;
+    char pixelbw;
     char hasChanged = 0;
 
     unsigned char *screenBufferCompressed;
@@ -280,15 +281,23 @@ int thread_fn(void* v)
             {
                 for(i=0 ; i<8 ; i++ )
                 {
-                    pixel = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i)));
+                    pixel = ioread16((void*)((uintptr_t)info->fix.smem_start + (x*16 + y*800 + i*2)));
+					
+			// Extract red, green, and blue components from RGB565 pixel
+			red = (pixel >> 11) & 0x1F;
+			green = (pixel >> 5) & 0x3F;
+			blue = pixel & 0x1F;
+
+			// Convert RGB565 components to grayscale 
+			grayscale = ((29 * red) + (59 * green) + (12 * blue))/100;
 			
 		    // Calculate the threshold value based on the dithering matrix
 		    threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
 
 		    // Set the pixel value to either white or black
-		    pixelbw = (pixel > threshold) ? 1 : 0;
+		    //pixelbw = (pixel > threshold) ? 1 : 0;
 
-                    if(pixelbw == 1)
+                    if(pixelbw > threshold)
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
