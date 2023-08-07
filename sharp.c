@@ -91,7 +91,7 @@ static struct fb_fix_screeninfo vfb_fix = {
     .xpanstep = 0,
     .ypanstep = 0,
     .ywrapstep =    0,
-    .visual =	FB_VISUAL_MONO10,
+    .visual =	FB_VISUAL_TRUECOLOR,
     .accel =    FB_ACCEL_NONE,
 };
 
