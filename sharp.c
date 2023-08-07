@@ -235,10 +235,10 @@ int thread_fn(void* v)
     char sendBuffer[1 + (1+50+1)*1 + 1];
 
     int ditherMatrix[4][4] = {
-	    { 0,  8,  2, 10 },
-	    { 12,  4, 14,  6 },
-	    {  3, 11,  1,  9 },
-	    { 15,  7, 13,  5 }
+	    	{    15, 195,  60, 240  },
+		{   135,  75, 180, 120  },
+		{    45, 225,  30, 210  },
+		{   165, 105, 150,  90  }
 	};
 
     clearDisplay();
@@ -291,7 +291,7 @@ int thread_fn(void* v)
 			grayscale = ((29/100 * red) + (59/100 * green) + (12/100 * blue));
 			
 			// Calculate the threshold value based on the dithering matrix
-			threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
+			threshold = ditherMatrix[(x * 8 + i) % 4][y % 4];
 
 			if(grayscale > threshold)
                     {
