@@ -68,7 +68,6 @@ static struct fb_var_screeninfo vfb_default = {
     .xres_virtual = 400,
     .yres_virtual = 240,
     .bits_per_pixel = 16,
-    .grayscale = 1,
     .red =	{ 11, 5, 0 },
     .green =	{ 5,  6, 0 },
     .blue =	{ 0,  5, 0 },
