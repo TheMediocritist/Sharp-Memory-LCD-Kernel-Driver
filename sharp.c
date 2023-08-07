@@ -281,17 +281,17 @@ int thread_fn(void* v)
                 for(i=0 ; i<8 ; i++ )
 		{
                     pixelValue = ioread16((void*)((uintptr_t)info->fix.smem_start + (x*16 + y*800 + i*2)));  // Each pixel is 2 bytes
-					
+
 			// Extract red, green, and blue components from RGB565 pixel
 			red = (pixelValue >> 11) & 0x1F;
 			green = (pixelValue >> 5) & 0x3F;
 			blue = pixelValue & 0x1F;
 
 			// Convert RGB565 components to grayscale 
-			grayscale = ((29 * red) + (59 * green) + (12 * blue))/100;
+			grayscale = ((29/100 * red) + (59/100 * green) + (12/100 * blue));
 			
 			// Calculate the threshold value based on the dithering matrix
-			threshold = ((ditherMatrix[(x * 16 + i * 2) % 4][y % 4] * 255 + 7) / 15);
+			threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
 
 			if(grayscale > 0)
                     {
