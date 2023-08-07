@@ -291,7 +291,7 @@ int thread_fn(void* v)
 			grayscale = ((29 * red) + (59 * green) + (12 * blue))/100;
 			
 			// Calculate the threshold value based on the dithering matrix
-			threshold = ((ditherMatrix[(x * 8 + i) % 4][y % 4] * 255 + 7) / 15);
+			threshold = ((ditherMatrix[(x * 16 + i * 2) % 4][y % 4] * 255 + 7) / 15);
 
 			if(grayscale > threshold)
                     {
