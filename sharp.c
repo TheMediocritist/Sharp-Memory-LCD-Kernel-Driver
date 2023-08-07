@@ -280,7 +280,7 @@ int thread_fn(void* v)
             {
                 for(i=0 ; i<8 ; i++ )
 		{
-                    pixelValue = ioread16((void*)((uintptr_t)info->fix.smem_start + (x*2 + y*800 + i*2)));  // Each pixel is 2 bytes
+                    pixelValue = ioread16((void*)((uintptr_t)info->fix.smem_start + (x*16 + y*800 + i*2)));  // Each pixel is 2 bytes
 					
 			// Extract red, green, and blue components from RGB565 pixel
 			red = (pixelValue >> 11) & 0x1F;
