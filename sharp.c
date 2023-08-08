@@ -67,10 +67,10 @@ static struct fb_var_screeninfo vfb_default = {
     .yres =     240,
     .xres_virtual = 400,
     .yres_virtual = 240,
-    .bits_per_pixel = 16,
-    .red =	{ 11, 5, 0 },
-    .green =	{ 5,  6, 0 },
-    .blue =	{ 0,  5, 0 },
+    .bits_per_pixel = 8,
+    .red =	{ 0, 8, 0 },
+    .green =	{ 0,  8, 0 },
+    .blue =	{ 0,  8, 0 },
     .activate = FB_ACTIVATE_NOW,
     .height =   400,
     .width =    240,
@@ -87,7 +87,7 @@ static struct fb_var_screeninfo vfb_default = {
 static struct fb_fix_screeninfo vfb_fix = {
     .id =       "Sharp FB",
     .type =     FB_TYPE_PACKED_PIXELS,
-    .line_length = 800,
+    .line_length = 400,
     .xpanstep = 0,
     .ypanstep = 0,
     .ywrapstep =    0,
@@ -280,15 +280,15 @@ int thread_fn(void* v)
             {
                 for(i=0 ; i<8 ; i++ )
 		{
-                    pixelValue = ioread16((void*)((uintptr_t)info->fix.smem_start + (x*16 + y*800 + i*2)));  // Each pixel is 2 bytes
+                    pixelValue = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i))); 
 
 			// Extract red, green, and blue components from RGB565 pixel
-			red = (pixelValue >> 11) & 0x1F;
-			green = (pixelValue >> 5) & 0x3F;
-			blue = pixelValue & 0x1F;
+			// red = (pixelValue >> 11) & 0x1F;
+			// green = (pixelValue >> 5) & 0x3F;
+			// blue = pixelValue & 0x1F;
 
 			// Convert RGB565 components to grayscale 
-			grayscale = ((29/100 * red) + (59/100 * green) + (12/100 * blue));
+			// grayscale = ((29/100 * red) + (59/100 * green) + (12/100 * blue));
 			
 			// Calculate the threshold value based on the dithering matrix
 			threshold = ditherMatrix[(x * 8 + i) % 4][y % 4];
