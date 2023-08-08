@@ -304,11 +304,11 @@ int thread_fn(void* v)
                         bufferByte &=  ~(1 << (7 - i)); 
                     }
                 }
-                if(!hasChanged && (screenBufferCompressed[x + 2 + y*(50+4)] != bufferByte))
+                if(screenBufferCompressed[x + 2 + y*(50+4)] != bufferByte)
                 {
                     hasChanged = 1;
+		    screenBufferCompressed[x+2 + y*(50+4)] = bufferByte;
                 }
-                screenBufferCompressed[x+2 + y*(50+4)] = bufferByte;
             }
 
             if(hasChanged)
