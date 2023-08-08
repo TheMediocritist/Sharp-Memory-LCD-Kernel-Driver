@@ -68,9 +68,10 @@ static struct fb_var_screeninfo vfb_default = {
     .xres_virtual = 400,
     .yres_virtual = 240,
     .bits_per_pixel = 8,
-    .red =	{ 0, 8, 0 },
-    .green =	{ 0,  8, 0 },
-    .blue =	{ 0,  8, 0 },
+    .grayscale = 1,
+    .red =      { 0, 8, 0 },
+    .green =    { 0, 8, 0 },
+    .blue =     { 0, 8, 0 },
     .activate = FB_ACTIVATE_NOW,
     .height =   400,
     .width =    240,
@@ -226,8 +227,7 @@ int thread_fn(void* v)
 {
     //int i;
     int x, y, i, threshold;
-	uint8_t red, green, blue, grayscale;
-	uint16_t pixelValue;
+    char pixel, pixelbw;
     char hasChanged = 0;
 
     unsigned char *screenBufferCompressed;
@@ -279,21 +279,10 @@ int thread_fn(void* v)
             for(x=0 ; x<50 ; x++)
             {
                 for(i=0 ; i<8 ; i++ )
-		{
-                    pixelValue = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i))); 
+                {
+                    pixel = ioread8((void*)((uintptr_t)info->fix.smem_start + (x*8 + y*400 + i)));
 
-			// Extract red, green, and blue components from RGB565 pixel
-			// red = (pixelValue >> 11) & 0x1F;
-			// green = (pixelValue >> 5) & 0x3F;
-			// blue = pixelValue & 0x1F;
-
-			// Convert RGB565 components to grayscale 
-			// grayscale = ((29/100 * red) + (59/100 * green) + (12/100 * blue));
-			
-			// Calculate the threshold value based on the dithering matrix
-			threshold = ditherMatrix[(x * 8 + i) % 4][y % 4];
-
-			if(grayscale > threshold)
+                    if(pixel > ditherMatrix[(x * 8 + i) % 4][y % 4])
                     {
                         // passe le bit 7 - i a 1
                         bufferByte |=  (1 << (7 - i)); 
